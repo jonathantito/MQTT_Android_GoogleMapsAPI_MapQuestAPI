@@ -1,3 +1,5 @@
+//Modif.1 2 de Febrero de 2017
+//Modif.1 Se añade soporte para login
 apply plugin: 'com.android.application'
 
 android {
@@ -24,8 +26,11 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    //Modif.1 Se añade para el login
+
     compile 'com.android.support:appcompat-v7:25.1.1'
     compile 'com.google.android.gms:play-services:10.0.1'
+    compile 'com.android.volley:volley:1.0.0'
+    compile 'com.android.support:design:25.1.1'
     testCompile 'junit:junit:4.12'
-
 }

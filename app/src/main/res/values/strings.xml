@@ -1,4 +1,17 @@
 <resources>
-    <string name="app_name">testAPIgoogle</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="app_name">MQTT App</string>
+    <string name="title_activity_maps">Mapa</string>
+    <string name="title_activity_login">Ingreso</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Correo Electrónico</string>
+    <string name="prompt_password">Contraseña</string>
+    <string name="action_sign_in">Ingresar</string>
+    <string name="action_sign_in_short">Registrarse</string>
+    <string name="error_invalid_email">La dirección de correo es inválida</string>
+    <string name="error_invalid_password">La contraseña es demasiado corta</string>
+    <string name="error_incorrect_password">Esta contraseña es incorrecta</string>
+    <string name="error_field_required">Este campo es requerido</string>
+    <string name="permission_rationale">"Se necesita permisos para autocompletar con los correos de los contactos del teléfono"
+    </string>
 </resources>
