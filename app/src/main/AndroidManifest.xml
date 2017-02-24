@@ -16,6 +16,7 @@ Modif.1 5 de Febrero de 2017
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <!--
 Modif.1 permisos añadidos INICIO
     <uses-permission android:name="com.androidtutorialpoint.mymapsappsdirection.permission.MAPS_RECEIVE" />
@@ -47,7 +48,8 @@ Modif.1 permisos añadidos INICIO
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps">
-            <!--Modif.1 Cambio la actividad inicial INICIO-->
+
+            <!-- Modif.1 Cambio la actividad inicial INICIO -->
             <!--
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -55,7 +57,7 @@ Modif.1 permisos añadidos INICIO
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             -->
-            <!--Modif.1 Cambio la actividad inicial FIN-->
+            <!-- Modif.1 Cambio la actividad inicial FIN -->
         </activity>
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
@@ -75,6 +77,7 @@ Modif.1 permisos añadidos INICIO
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".SuscriptionActivity"></activity>
     </application>
 
 </manifest>
