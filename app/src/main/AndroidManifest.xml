@@ -26,6 +26,7 @@ Modif.1 permisos añadidos INICIO
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     Modif.1 permisos añadidos FIN
     -->
+    <uses-permission android:name="android.permission.INTERNET"/><!--Modif.1.new.ln-->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
