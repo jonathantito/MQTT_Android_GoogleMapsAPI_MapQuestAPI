@@ -11,15 +11,16 @@
     tools:context="com.example.dell.testapigoogle.ConfigurationActivity">
 
     <TextView
-        android:text="TextView"
+        android:text="IP o Dominio de BDD"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView_ipBDD"
-        tools:text="Dirección IP o Dominio del servidor de Base de Datos"
+        tools:text="IP o Dominio de BDD"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="41dp"
-        android:contentDescription="Dirección IP o Dominio del servidor de Base de Datos" />
+        android:contentDescription="IP o Dominio de BDD"
+        android:hint="IP o Dominio de BDD"/>
 
     <Button
         android:text="Guardar"
