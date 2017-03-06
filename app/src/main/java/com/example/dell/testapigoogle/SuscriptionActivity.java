@@ -20,11 +20,6 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,23 +27,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Iterator;
 import java.util.StringTokenizer;
-//import android.widget.AdapterView;
 
 //public class SuscriptionActivity extends AppCompatActivity { //Modif.1.old.ln
 public class SuscriptionActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener { //Modif.1.new.ln
-//Modif.2.new INICIO
+    //Modif.2.new INICIO
     public String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/mqttdata";
-    //private Button bSus;
-
     //Modif.2.new FIN
     //Modif.1.new INICIO
-    //private Spinner spinner;
     private Spinner spinner;
     private ArrayList<String> rutasAL;
-    //private static final String []rutas = {"UIO-AMB","UIO-GYE", "UIO-ESM"};
     //Modif.1.new FIN
 
 
@@ -59,32 +48,40 @@ public class SuscriptionActivity extends AppCompatActivity implements AdapterVie
 
         //Modif.2.old.ini INICIO
         final Button bSus = (Button) findViewById(R.id.btnSuscribirse);
-        rutasAL=new ArrayList<String>();
+        rutasAL = new ArrayList<String>();
         spinner = (Spinner) findViewById(R.id.spinner_susr);
         spinner.setOnItemSelectedListener(this);
-
         //Modif.2.old.end FIN
-        //bSus.setOnClickListener(new View.OnClickListener() {
-            //@Override
-            //public void onClick(View v) {
-                //final String ruta="UIO-AMB";
+        bSus.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent nextIntent = new Intent(SuscriptionActivity.this, MapsActivity.class);
+                                        nextIntent.putExtra("key","val");
+                                        SuscriptionActivity.this.startActivity(nextIntent);
+                                    }
+                                });
                 if (isOnline() == true) {
                     // Response received from the server
                     Response.Listener<String> responseListener = new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
                             try {
-                                //JSONObject jsonResponse = new JSONObject(response);
-                                //boolean success = jsonResponse.getBoolean("success");
-                                //JSONArray JSONrutas = new JSONArray(response);
-                                //String[] rutas = response.split("{\"ruta\":");
-                                //String responsex =response;
                                 StringTokenizer rutas = new StringTokenizer(response, "{\"ruta\":");
                                 /*List<String>*/ rutasAL = new ArrayList<String>();
                                 while (rutas.hasMoreTokens()) {
                                     rutasAL.add(rutas.nextToken());
                                 }
-/*
+                                int i = 0;
+                                for (Iterator<String> it = rutasAL.iterator(); it.hasNext(); )
+                                {
+                                    it.next();
+                                    if (i % 2 != 0)
+                                    {
+                                        it.remove();
+                                    }
+                                    i++;
+                                }
+                                /*
                                 spinner = (Spinner) findViewById(R.id.spinner_susr);
 
                                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(SuscriptionActivity.this, android.R.layout.simple_spinner_item, rutasAL);
@@ -203,13 +200,14 @@ catch(Exception e)
 
     public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
 
-        switch (position) {
-            case 0:
+        /*switch (position) {
+            case 0:*/
                 Context context = getApplicationContext();
-                CharSequence text = "Usted escogió la ruta 0";
+                CharSequence text = parent.getSelectedItem().toString();//"Usted escogió la ruta 0";
                 int duration = Toast.LENGTH_SHORT;
                 Toast toast = Toast.makeText(context, text, duration);
                 toast.show();
+        /*
                 break;
             case 1:
                 // Whatever you want to happen when the second item gets selected
@@ -218,7 +216,7 @@ catch(Exception e)
                 // Whatever you want to happen when the thrid item gets selected
                 break;
 
-        }
+        }*/
     }
 
     @Override
