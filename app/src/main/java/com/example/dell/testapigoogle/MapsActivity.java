@@ -57,15 +57,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     //Modif.1.new VARIABLES AÑADIDAS inicio
     ArrayList<LatLng> MarkerPoints;
-    GoogleApiClient mGoogleApiClient;
-    Location mLastLocation;
-    Marker mCurrLocationMarker;
-    LocationRequest mLocationRequest;
     //Modif.1.new VARIABLES AÑADIDAS fin
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);//Modif.1 1
         setContentView(R.layout.activity_maps);
         Bundle extras = getIntent().getExtras();
         if(extras != null)
@@ -94,7 +90,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+        mMap = googleMap; //Modif.1 2
 
         //Modif.1.new INICIO
         //Initialize Google Play Services
@@ -185,7 +181,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         // Sensor enabled
-        String sensor = "sensor=false";
+        //String sensor = "sensor=false";//Modif.1.old.ln
+        String sensor = "sensor=false";//Modif.1.new.ln
 
         // Building the parameters to the web service
         String parameters = str_origin + "&" + str_dest + "&" + sensor;

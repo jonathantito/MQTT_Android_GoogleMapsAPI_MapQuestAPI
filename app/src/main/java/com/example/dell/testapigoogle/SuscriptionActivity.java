@@ -27,6 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
@@ -66,50 +67,27 @@ public class SuscriptionActivity extends AppCompatActivity implements AdapterVie
                         @Override
                         public void onResponse(String response) {
                             try {
-                                StringTokenizer rutas = new StringTokenizer(response, "{\"ruta\":");
+                                //StringTokenizer rutas = new StringTokenizer(response, "{\"ruta\":");//Modif.1.old.ln
+                                StringTokenizer rutas = new StringTokenizer(response, "{\"");
                                 /*List<String>*/ rutasAL = new ArrayList<String>();
                                 while (rutas.hasMoreTokens()) {
-                                    rutasAL.add(rutas.nextToken());
+
+                                        rutasAL.add(rutas.nextToken());
                                 }
-                                int i = 0;
-                                for (Iterator<String> it = rutasAL.iterator(); it.hasNext(); )
+                                int imax = rutasAL.size();
+
+                                for (int i = 0; i < imax;i++ )
                                 {
-                                    it.next();
-                                    if (i % 2 != 0)
+                                    if(rutasAL.get(i).contains("ruta")
+                                            ||rutasAL.get(i).contains(":")
+                                            ||rutasAL.get(i).contains("}"))
                                     {
-                                        it.remove();
+                                        //rutasAL.remove(i);
+                                        rutasAL.set(i,"");
                                     }
-                                    i++;
                                 }
-                                /*
-                                spinner = (Spinner) findViewById(R.id.spinner_susr);
+                                rutasAL.removeAll(Arrays.asList(null,""));
 
-                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(SuscriptionActivity.this, android.R.layout.simple_spinner_item, rutasAL);
-
-                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                spinner.setAdapter(adapter);
-                                spinner.setOnItemSelectedListener(this);
-                                */
-
-                                //String[] rutasAR = new String[rutasAL.size()];
-                                //rutasAR = rutasAL.toArray(rutasAR);
-/*
-                                Spinner spinner = (Spinner) findViewById(R.id.spinner_susr);
-// Create an ArrayAdapter using the string array and a default spinner layout
-                                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, rutasAR, android.R.layout.simple_spinner_item);
-// Specify the layout to use when the list of choices appears
-                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-// Apply the adapter to the spinner
-                                spinner.setAdapter(adapter);
-*//*
-                                Spinner sp = (Spinner) findViewById(R.id.spinner_susr);
-                                ArrayAdapter<String> adapter =
-                                        new ArrayAdapter<String> (this, android.R.layout.simple_spinner_item, rutasAR);
-                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                sp.setAdapter(adapter);
-                                AdapterView.OnItemSelectedListener spinnerListener = new myOnItemSelectedListener(this);
-                                sp.setOnItemSelectedListener(spinnerListener);*/
-                                //sp.setSelection(dftIndex);
                                 spinner.setAdapter(new ArrayAdapter<String>(SuscriptionActivity.this, android.R.layout.simple_spinner_dropdown_item, rutasAL));
 
                             } catch (Exception e) {
