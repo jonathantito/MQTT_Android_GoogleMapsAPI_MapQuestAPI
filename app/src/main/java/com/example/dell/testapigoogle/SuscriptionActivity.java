@@ -1,6 +1,13 @@
 //Modif.1 2 de Febrero de 2017
 //        Se modifica para mostrar las rutas en un spinner
 //http://stackoverflow.com/questions/13377361/how-to-create-a-drop-down-list
+
+//Modif.2 3 de Febrero de 2017
+//        Se modifica para mostrar las rutas en un spinner consultando a la base de datos mediante PHP y retornando valores en JSON
+
+
+//Modif.3 4 de Febrero de 2017
+//        Se modifica el desarrollo para pasar el origen y destino de la ruta a MapsActivity
 package com.example.dell.testapigoogle;
 
 import android.app.AlertDialog;
@@ -33,9 +40,8 @@ import java.util.StringTokenizer;
 
 //public class SuscriptionActivity extends AppCompatActivity { //Modif.1.old.ln
 public class SuscriptionActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener { //Modif.1.new.ln
-    //Modif.2.new INICIO
-    public String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/mqttdata";
-    //Modif.2.new FIN
+    public String desdehacia="";
+    public String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/mqttdata";//Modif.2.new.ln
     //Modif.1.new INICIO
     private Spinner spinner;
     private ArrayList<String> rutasAL;
@@ -57,7 +63,8 @@ public class SuscriptionActivity extends AppCompatActivity implements AdapterVie
                                     @Override
                                     public void onClick(View v) {
                                         Intent nextIntent = new Intent(SuscriptionActivity.this, MapsActivity.class);
-                                        nextIntent.putExtra("key","val");
+                                        //nextIntent.putExtra("key","val");//Modif.3.old.ln
+                                        nextIntent.putExtra("topico",desdehacia);//Modif.3.new.ln
                                         SuscriptionActivity.this.startActivity(nextIntent);
                                     }
                                 });
@@ -125,27 +132,7 @@ public class SuscriptionActivity extends AppCompatActivity implements AdapterVie
                 }
 
                 //Modif.1.new INICIO
-/*
-try{
-    if (!rutasAL.isEmpty())
-    {
-                spinner = (Spinner) findViewById(R.id.spinner_susr);
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(SuscriptionActivity.this, android.R.layout.simple_spinner_item, rutasAL);
 
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinner.setAdapter(adapter);
-                spinner.setOnItemSelectedListener(this);
-    }
-}
-catch(Exception e)
-{
-    e.printStackTrace();
-}
-*/
-                //Modif.1.new FIN
-            //}
-        //});
-        //spinner.setOnItemSelectedListener(this);
 
 
 
@@ -153,48 +140,16 @@ catch(Exception e)
     }
 
 
-/*
-    public class myOnItemSelectedListener implements AdapterView.OnItemSelectedListener {
-
-        Context mContext;
-
-        public myOnItemSelectedListener(Context context){
-            this.mContext = context;
-        }
-
-        public void onItemSelected(AdapterView<?> parent, View v, int pos, long row) {
-
-            Country country = countryList.get(pos);
-            displayCountryInformation(country);
-
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> arg0) {
-            //nothing here
-        }
-    }
-    */
 
     public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
 
-        /*switch (position) {
-            case 0:*/
                 Context context = getApplicationContext();
                 CharSequence text = parent.getSelectedItem().toString();//"Usted escogió la ruta 0";
                 int duration = Toast.LENGTH_SHORT;
                 Toast toast = Toast.makeText(context, text, duration);
                 toast.show();
-        /*
-                break;
-            case 1:
-                // Whatever you want to happen when the second item gets selected
-                break;
-            case 2:
-                // Whatever you want to happen when the thrid item gets selected
-                break;
+                desdehacia=text.toString();//Modif.3.new.ln
 
-        }*/
     }
 
     @Override

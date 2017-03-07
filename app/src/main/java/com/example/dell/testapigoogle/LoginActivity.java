@@ -83,17 +83,6 @@ public class LoginActivity extends AppCompatActivity {
                                 boolean success = jsonResponse.getBoolean("success");
 
                                 if (success) {
-                                    //flagRespuesta=1;
-                                    //Modif.1.old.ini INICIO
-                                    // String name = jsonResponse.getString("name");
-                                    //int age = jsonResponse.getInt("age");
-                                /*
-                                Intent intent = new Intent(LoginActivity.this, UserAreaActivity.class);
-                                //intent.putExtra("name", name);
-                                //intent.putExtra("age", age);
-                                intent.putExtra("nombreUsuario", username);
-                                LoginActivity.this.startActivity(intent);
-                                */
                                     //Modif.1.old.ini FIN
                                     Intent nextIntent = new Intent(LoginActivity.this, SuscriptionActivity.class);//Modif.1.C.new.ln
                                     LoginActivity.this.startActivity(nextIntent);//Modif.1.C.new.ln
@@ -117,24 +106,6 @@ public class LoginActivity extends AppCompatActivity {
                         }
 
                     };
-                    /*
-                    if(flagRespuesta==0||flagRespuesta==3)
-                    //if(flagRespuesta==0)
-                    {
-                        //verifique los servicios Apache y MySQL esten arriba
-                        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                        builder.setMessage("Verifique los servicios Apache y MySQL esten arriba, además verifique la IP del Broker MQTT")
-                                .setNegativeButton("Reintentar", null)
-                                .create()
-                                .show();
-                        //flagRespuesta=0;
-
-                    }*/
-
-
-
-                    //////
-                    //
                     File file = new File (path + "/conf.txt");
                     String [] loadText = Load(file);
 

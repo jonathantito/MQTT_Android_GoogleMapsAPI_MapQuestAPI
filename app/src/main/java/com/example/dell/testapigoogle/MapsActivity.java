@@ -1,3 +1,7 @@
+//Modif.1 6 de Febrero de 2017
+// Se programa un mapa en el que se indique la ruta a seguir por un automovil entre dos gestos "tap"
+//Modif.2 7 de Febrero de 2017
+// Se modifica para trabajar con la ruta a la que se suscribio el usuario
 package com.example.dell.testapigoogle;
 
 import android.content.Context;
@@ -14,33 +18,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,8 +40,8 @@ import java.util.List;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback { //Modif.1.old
 //public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {//Modif.1.new
     private GoogleMap mMap;
-    //Modif.1.new VARIABLES AÑADIDAS inicio
-    ArrayList<LatLng> MarkerPoints;
+    ArrayList<LatLng> MarkerPoints; //Modif.1.new.ln
+    String valOriDes="";//Modif.2.new.ln
     //Modif.1.new VARIABLES AÑADIDAS fin
 
     @Override
@@ -66,9 +51,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Bundle extras = getIntent().getExtras();
         if(extras != null)
         {
-            String value = extras.getString("key");
+            //String value = extras.getString("key");//Modif.2.old.ln
+            valOriDes = extras.getString("topico");//Modif.2.new.ln
             Context context = getApplicationContext();
-            CharSequence text = value;//"Usted escogió la ruta 0";
+            CharSequence text = valOriDes;//"Usted escogió la ruta 0";
             int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
@@ -93,7 +79,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap; //Modif.1 2
 
         //Modif.1.new INICIO
-        //Initialize Google Play Services
+        //Se inicializa la localización, no se tiene éxito al tratar de inicializar los servicios de Google Play
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)
@@ -110,87 +96,103 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Modif.1.old FIN
 
         //Modif.1 Evento Onclick INICIO
-        // Setting onclick event listener for the map
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+        // Evento de clic sobre el mapa
+        //mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {//Modif.2.old.ln
 
-            @Override
-            public void onMapClick(LatLng point) {
+            //@Override//Modif.2.old.ln
+            //public void onMapClick(LatLng point) {//Modif.2.old.ln
 
-                // Already two locations
+                // Verifica si se marco los 2 lugares, no solo 1
+                //Modif.2.old.ln INICIO
+                /*
                 if (MarkerPoints.size() > 1) {
                     MarkerPoints.clear();
                     mMap.clear();
-                }
+                }*/
+                //Modif.2.old.ln FIN
 
-                // Adding new item to the ArrayList
-                MarkerPoints.add(point);
+                // Cada tap son puntos en el mapa a almacenarse
+                //MarkerPoints.add(point);//Modif.2.old.ln************
+                //MarkerPoints.add()//Modif.2.new.ln
+        /*
+                GeoApiContext context = new GeoApiContext().setApiKey("YOUR_API_KEY");
+                GeocodingResult[] results =  GeocodingApi.geocode(context,
+                "1600 Amphitheatre Parkway Mountain View, CA 94043").await();
+                System.out.println(results[0].formattedAddress);
+                */
 
-                // Creating MarkerOptions
-                MarkerOptions options = new MarkerOptions();
+                // Se configura los marcadores
+                //MarkerOptions options = new MarkerOptions();//Modif.2.old.ln************
 
-                // Setting the position of the marker
-                options.position(point);
+                // Su posición es en el punto en el que se dio el tap
+                //options.position(point);//Modif.2.old.ln************
 
                 /**
-                 * For the start location, the color of marker is GREEN and
-                 * for the end location, the color of marker is RED.
+                 * El marcador de origen es de color verde
+                 * l marcador del destino es de color rojo
                  */
                 if (MarkerPoints.size() == 1) {
-                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                    //options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));//Modif.2.old.ln************
                 } else if (MarkerPoints.size() == 2) {
-                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                    //options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));//Modif.2.old.ln************
                 }
 
+                //mMap.addMarker(options);//Modif.2.old.ln************
 
-                // Add new marker to the Google Map Android API V2
-                mMap.addMarker(options);
+                // Verifica si el origen y el destino fueron capturados
+                ////Modif.2.old.ini************ INICIO
+                //if (MarkerPoints.size() >= 2) {
+                //    LatLng origin = MarkerPoints.get(0);
+                //    LatLng dest = MarkerPoints.get(1);
+                ////Modif.2.old.ini************ FIN
+                    // Se arma la url que consultara al Google Directions API
+                    //String url = getUrl(origin, dest);//Modif.2.old.ln************
 
-                // Checks, whether start and end locations are captured
-                if (MarkerPoints.size() >= 2) {
-                    LatLng origin = MarkerPoints.get(0);
-                    LatLng dest = MarkerPoints.get(1);
-
-                    // Getting URL to the Google Directions API
-                    String url = getUrl(origin, dest);
+                    String[] separated = valOriDes.split(",");
+                    String ori = separated[0];
+                    String des = separated[1];
+                    String url = getUrl(ori, des);
                     Log.d("onMapClick", url.toString());
                     FetchUrl FetchUrl = new FetchUrl();
 
-                    // Start downloading json data from Google Directions API
+                    // Comienza la descarga en formato JSON de la ruta calculada por el Google Directions API
                     FetchUrl.execute(url);
-                    //move map camera
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(origin));
-                    mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
-                }
+                    //Se mueve el enfoque del mapa
+                    //mMap.moveCamera(CameraUpdateFactory.newLatLng(origin));//Modif.2.old.ln************
+                    //mMap.moveCamera(CameraUpdateFactory.newLatLng());//Modif.2.new.ln************
+                    //mMap.animateCamera(CameraUpdateFactory.zoomTo(11));//Modif.2.old.ln************
+                //}//Modif.2.old.ln************
 
-            }
-        });
+            //}//Modif.2.old.ln
+        //});//Modif.2.old.ln
         //Modif.1 Evento Onclick FIN
 
 
     }
 
 
+
     //Modif.1 método getUrl INICIO
-    private String getUrl(LatLng origin, LatLng dest) {
+    //private String getUrl(LatLng origin, LatLng dest) {//Modif.1.new.ln
+    private String getUrl(String origin, String dest) {//Modif.2.new.ln
+        // origen de la ruta
+        String str_origin = "origin=" + origin;//origin.latitude + "," + origin.longitude;
 
-        // Origin of route
-        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
-
-        // Destination of route
-        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+        // Ddestino de la ruta
+        String str_dest = "destination=" + dest;//dest.latitude + "," + dest.longitude;
 
 
-        // Sensor enabled
+        // Sensor del GPS
         //String sensor = "sensor=false";//Modif.1.old.ln
         String sensor = "sensor=false";//Modif.1.new.ln
 
-        // Building the parameters to the web service
+        // Formato del servicio Web
         String parameters = str_origin + "&" + str_dest + "&" + sensor;
 
-        // Output format
+        // Formato en el que entrega el resultado el servicio web
         String output = "json";
 
-        // Building the url to the web service
+        // URL armada para enviarse al servicio web
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
 
 
@@ -199,17 +201,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //Modif.1 método getUrl FIN
 
     //Modif.1 Subclase FetchUrl INICIO
-    // Fetches data from url passed
+    // Extrae la data del servicio web
     private class FetchUrl extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... url) {
 
-            // For storing data from web service
+            // Para guardar la data que devuelva el Web Service
             String data = "";
 
             try {
-                // Fetching the data from web service
+                // Extrayendo los datos
                 data = downloadUrl(url[0]);
                 Log.d("Background Task data", data.toString());
             } catch (Exception e) {
@@ -224,7 +226,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             ParserTask parserTask = new ParserTask();
 
-            // Invokes the thread for parsing the JSON data
+            // IInvoca al hilo para pasarle los datos en JSON
             parserTask.execute(result);
 
         }
@@ -239,13 +241,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         try {
             URL url = new URL(strUrl);
 
-            // Creating an http connection to communicate with url
+            // Se crea una conexión http para enviar la URL
             urlConnection = (HttpURLConnection) url.openConnection();
 
-            // Connecting to url
+            // Conectandose a la URL
             urlConnection.connect();
 
-            // Reading data from url
+            // RLeyendo datos de la URL
             iStream = urlConnection.getInputStream();
 
             BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
@@ -274,7 +276,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //Modif.1 subclase ParserTask INICIO
     private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
 
-        // Parsing the data in non-ui thread
+        // Manejando la data en un hilo no visible para el usuario
         @Override
         protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
 
@@ -287,7 +289,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 DataParser parser = new DataParser();
                 Log.d("ParserTask", parser.toString());
 
-                // Starts parsing data
+                // Comienza el analisis de la data obtenida
                 routes = parser.parse(jObject);
                 Log.d("ParserTask","Executing routes");
                 Log.d("ParserTask",routes.toString());
@@ -303,40 +305,45 @@ protected void onPostExecute(List<List<HashMap<String, String>>> result) {
     ArrayList<LatLng> points;
     PolylineOptions lineOptions = null;
 
-    // Traversing through all the routes
+    // Atravesando todas las rutas
     for (int i = 0; i < result.size(); i++) {
         points = new ArrayList<>();
         lineOptions = new PolylineOptions();
 
-        // Fetching i-th route
+        // Desde la i-ésima ruta
         List<HashMap<String, String>> path = result.get(i);
 
-        // Fetching all the points in i-th route
+        // Analizando todos los puntos de la i-ésima ruta
         for (int j = 0; j < path.size(); j++) {
             HashMap<String, String> point = path.get(j);
 
             double lat = Double.parseDouble(point.get("lat"));
             double lng = Double.parseDouble(point.get("lng"));
             LatLng position = new LatLng(lat, lng);
-
+            if (j==path.size()/2 || j==(path.size()+1)/2) {
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(position));//Modif.2.new.ln
+                //mMap.animateCamera(CameraUpdateFactory.zoomTo(11));//Modif.2.old.ln
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(7));//Modif.2.new.ln
+            }
             points.add(position);
         }
 
-        // Adding all the points in the route to LineOptions
+        // Se añade todos los puntos de la ruta
         lineOptions.addAll(points);
-        lineOptions.width(10);
+        //lineOptions.width(10);//Modif.2.old.ln
+        lineOptions.width(7);//Modif.2.new.ln
         lineOptions.color(Color.RED);
 
-        Log.d("onPostExecute","onPostExecute lineoptions decoded");
+        Log.d("onPostExecute","onPostExecute se decodifico las lineas");
 
     }
 
-    // Drawing polyline in the Google Map for the i-th route
+    // Se dibuja la poli-linea en google maps
     if(lineOptions != null) {
         mMap.addPolyline(lineOptions);
     }
     else {
-        Log.d("onPostExecute","without Polylines drawn");
+        Log.d("onPostExecute","no se dibujo las polilineas");
     }
 
 }
