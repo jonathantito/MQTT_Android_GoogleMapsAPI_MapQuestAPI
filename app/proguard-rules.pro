@@ -15,3 +15,11 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+#    Modif.1
+#    Se añade código para poder utilizar el protocolo MQTT en Android
+#    1 de Febrero de 2017
+#    Bibliografía:
+#http://stackoverflow.com/questions/35796144/progaurd-issue-warningignoring-innerclasses-attribute-for-an-anonymous-inner-c/35798565#35798565
+#http://stackoverflow.com/questions/3308010/what-is-the-ignoring-innerclasses-attribute-warning-output-during-compilation/3308059#3308059
+-keepattributes EnclosingMethod #Se usa y se depura, luego se comenta y se vuelve a depurar
+                                 #y se vuelve a ejecutar exitosamente desde el celular

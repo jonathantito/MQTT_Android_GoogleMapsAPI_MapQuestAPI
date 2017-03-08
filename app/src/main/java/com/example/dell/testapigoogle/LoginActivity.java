@@ -34,6 +34,7 @@ import java.io.InputStreamReader;
 public class LoginActivity extends AppCompatActivity {
     //static int flagRespuesta = 0;
     public String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/mqttdata";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

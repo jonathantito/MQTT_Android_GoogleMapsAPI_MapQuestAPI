@@ -1,5 +1,7 @@
 //Modif.1 2 de Febrero de 2017
 //Modif.1 Se añade soporte para login
+//Modif.2 5 de Febrero de 2017
+//Modif.2 Se añade soporte para el protocolo MQTT
 apply plugin: 'com.android.application'
 
 android {
@@ -18,9 +20,21 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        //Modif.2 Se añade para poder correr la  app en un smartphone desde Android Studio INICIO
+        debug {
+            debuggable true
+        }
+        //Modif.2 Se añade para poder correr la  app en un smartphone desde Android Studio FIN
+
     }
 }
-
+/* Modif.1 repositorio MQTT  inicio*/
+repositories {
+    maven {
+        url "https://repo.eclipse.org/content/repositories/paho-releases/"
+    }
+}
+/* Modif.1 repositorio MQTT  fin*/
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -33,4 +47,9 @@ dependencies {
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.android.support:design:25.1.1'
     testCompile 'junit:junit:4.12'
+    /* Modif.2 compilar MQTT  inicio*/
+    compile('org.eclipse.paho:org.eclipse.paho.android.service:1.0.2') {
+        exclude module: 'support-v4'
+    }
+    /* Modif.2 compilar MQTT  fin*/
 }

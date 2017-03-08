@@ -35,8 +35,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.StringTokenizer;
+
 
 //public class SuscriptionActivity extends AppCompatActivity { //Modif.1.old.ln
 public class SuscriptionActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener { //Modif.1.new.ln

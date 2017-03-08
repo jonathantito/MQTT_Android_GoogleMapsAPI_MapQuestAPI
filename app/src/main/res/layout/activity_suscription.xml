@@ -10,7 +10,7 @@
     tools:context=".SuscriptionActivity">
 
     <Button
-        android:text="Suscribirse"
+        android:text="Suscribirse a la ruta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
