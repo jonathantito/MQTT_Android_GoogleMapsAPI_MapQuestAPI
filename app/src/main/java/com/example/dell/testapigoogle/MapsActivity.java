@@ -2,9 +2,15 @@
 // Se programa un mapa en el que se indique la ruta a seguir por un automovil entre dos gestos "tap"
 //Modif.2 7 de Febrero de 2017
 // Se modifica para trabajar con la ruta a la que se suscribio el usuario
+//Modif.3 8 de Febrero de 2017
+// Se modifica para publicar mensaje mqtt
+
 package com.example.dell.testapigoogle;
 
 import android.content.Context;
+import android.media.Ringtone;
+import android.os.Environment;
+import android.os.Vibrator;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -22,11 +28,17 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.PolylineOptions;
+
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.json.JSONObject;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -36,23 +48,66 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 //Modif.1 importaciones añadidas FIN
-
+import org.eclipse.paho.android.service.MqttAndroidClient;
+import org.eclipse.paho.client.mqttv3.IMqttActionListener;
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.IMqttToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback { //Modif.1.old
 //public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {//Modif.1.new
     private GoogleMap mMap;
     ArrayList<LatLng> MarkerPoints; //Modif.1.new.ln
     String valOriDes="";//Modif.2.new.ln
+    String topicoCompleto="";//Modif.3.new.ln
     //Modif.1.new VARIABLES AÑADIDAS fin
+    //Modif.4.new.ini Configuración del Broker MQTT HiveMQ
+    static String MQTTHOST; //= "tcp://192.168.1.7:1883";
+    static String USERNAME = "ruta";
+    static String PASSWORD ="123abc456xyz";
+    String topicStr = "ruta/";
+    MqttAndroidClient client;
+    MqttConnectOptions options;
+    Vibrator vibrator;
+    Ringtone myRingtone;
+    String topicom;
+    public String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/mqttdata";//Modif.2.new.ln
+    //Modif.4.new.end del Broker MQTT HiveMQ MQTT HiveMQ
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);//Modif.1 1
         setContentView(R.layout.activity_maps);
+
+        File file = new File(path + "/conf.txt");
+        String[] loadText = Load(file);
+
+        String finalString = "";
+
+        for (int i = 0; i < loadText.length; i++) {
+            finalString += loadText[i];
+        }
+        MQTTHOST="tcp://"+finalString+":1883";
+        String clientId = MqttClient.generateClientId();
+        client = new MqttAndroidClient(this.getApplicationContext(), MQTTHOST,clientId);
+
+        options = new MqttConnectOptions();
+        options.setUserName(USERNAME);
+        options.setPassword(PASSWORD.toCharArray());
+
         Bundle extras = getIntent().getExtras();
+        ////client =  (MqttAndroidClient) extras.getSerializable("clienteMQTTobj");
         if(extras != null)
         {
             //String value = extras.getString("key");//Modif.2.old.ln
             valOriDes = extras.getString("topico");//Modif.2.new.ln
+            topicoCompleto = extras.getString("topicompleto");//Modif.3.new.ln
+
+
             Context context = getApplicationContext();
             CharSequence text = valOriDes;//"Usted escogió la ruta 0";
             int duration = Toast.LENGTH_SHORT;
@@ -170,7 +225,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    //Modif.1 CÓDIGO AÑADIDO inicio
+    public void pub(View v)
+    {
+        //String topic = "foo/bar";//Modif.1.D.old
 
+        //String topic = topicStr;//Modif.1.D.new
+        //String payload = "the payload";//Modif.1.D.old
+        String message = "evento reportado!!";//Modif.1.D.old
+        byte[] encodedPayload = new byte[0];
+        try {
+            //encodedPayload = payload.getBytes("UTF-8");//Modif.1.D.old
+            //MqttMessage message = new MqttMessage(encodedPayload);//Modif.1.D.old
+            //client.publish(topic, message);//Modif.1.D.old
+            client.publish(topicoCompleto, message.getBytes(),0,false);//Modif.1.D.new
+            //} catch (UnsupportedEncodingException | MqttException e) {//Modif.1.D.old
+        } catch (MqttException e) {//Modif.1.D.new
+            e.printStackTrace();
+        }
+    }
+    //Modif.2 función para suscribirse por MQTT INICIO
 
     //Modif.1 método getUrl INICIO
     //private String getUrl(LatLng origin, LatLng dest) {//Modif.1.new.ln
@@ -350,7 +424,49 @@ protected void onPostExecute(List<List<HashMap<String, String>>> result) {
     }
     //Modif.1 subclase ParserTask FIN
 
+    public static String[] Load(File file)
+    {
+        FileInputStream fis = null;
+        try
+        {
+            fis = new FileInputStream(file);
+        }
+        catch (FileNotFoundException e) {e.printStackTrace();}
+        InputStreamReader isr = new InputStreamReader(fis);
+        BufferedReader br = new BufferedReader(isr);
 
+        String test;
+        int anzahl=0;
+        try
+        {
+            while ((test=br.readLine()) != null)
+            {
+                anzahl++;
+            }
+        }
+        catch (IOException e) {e.printStackTrace();}
+
+        try
+        {
+            fis.getChannel().position(0);
+        }
+        catch (IOException e) {e.printStackTrace();}
+
+        String[] array = new String[anzahl];
+
+        String line;
+        int i = 0;
+        try
+        {
+            while((line=br.readLine())!=null)
+            {
+                array[i] = line;
+                i++;
+            }
+        }
+        catch (IOException e) {e.printStackTrace();}
+        return array;
+    }
 
 
 }

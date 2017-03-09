@@ -2,6 +2,10 @@
 Modif.1 5 de Febrero de 2017
         Se procede a modificar para poder dibujar rutas entre 2 lugares de google maps
 -->
+<!--
+Modif.2 5 de Febrero de 2017
+     Se procede a modificar para poder trabajar con el servicio que gestiona el protocolo MQTT
+-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.dell.testapigoogle">
 
@@ -31,6 +35,12 @@ Modif.1 permisos añadidos INICIO
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <!-- Modif.1.new.ln -->
+    <!--Modif.2 Permisos para el Servicio MQTT del proyecto PAHO inicio-->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!--Modif.2 Permisos para el Servicio MQTT del proyecto PAHO fin-->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -84,6 +94,10 @@ Modif.1 permisos añadidos INICIO
         </activity>
         <activity android:name=".SuscriptionActivity" />
         <activity android:name=".ConfigurationActivity"></activity>
+        <!--Modif.2 Servicio MQTT del proyecto PAHO inicio-->
+        <service android:name="org.eclipse.paho.android.service.MqttService" >
+        </service>
+        <!--Modif.2 Servicio MQTT del proyecto PAHO fin-->
     </application>
 
 </manifest>

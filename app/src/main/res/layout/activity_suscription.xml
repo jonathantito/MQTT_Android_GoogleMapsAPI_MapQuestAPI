@@ -10,6 +10,7 @@
     tools:context=".SuscriptionActivity">
 
     <Button
+
         android:text="Suscribirse a la ruta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,4 +26,16 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <Button
+        android:text="Ver mapa de la ruta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnSuscribirse"
+        android:layout_marginBottom="69dp"
+        android:id="@+id/btnMapaRuta"
+        android:layout_alignLeft="@+id/btnSuscribirse"
+        android:layout_alignStart="@+id/btnSuscribirse"
+        android:layout_alignRight="@+id/btnSuscribirse"
+        android:layout_alignEnd="@+id/btnSuscribirse" />
 </RelativeLayout>
